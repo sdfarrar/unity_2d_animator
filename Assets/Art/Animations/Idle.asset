@@ -20,3 +20,4 @@ MonoBehaviour:
     Duration: 1
   SampleRate: 0.9
   Loop: 1
+  Mirror: 0
