@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -418,6 +418,8 @@ GameObject:
   m_Component:
   - component: {fileID: 964387631}
   - component: {fileID: 964387629}
+  - component: {fileID: 964387632}
+  - component: {fileID: 964387630}
   m_Layer: 0
   m_Name: Lonk
   m_TagString: Untagged
@@ -440,6 +442,18 @@ MonoBehaviour:
   HitMask:
     serializedVersion: 2
     m_Bits: 131072
+--- !u!114 &964387630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 964387628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 749cecab54fe78c4c837ea87f7517f55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 584838160}
 --- !u!4 &964387631
 Transform:
   m_ObjectHideFlags: 0
@@ -454,6 +468,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &964387632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 964387628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab8dc7ab43bd31a4b83e99c74c611d09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MoveSpeed: 40
 --- !u!1 &1010026418
 GameObject:
   m_ObjectHideFlags: 0
