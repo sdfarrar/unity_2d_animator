@@ -6,18 +6,7 @@ public class TopdownController : MonoBehaviour {
 
     public Animator Animator;
 
-    //private Direction lastDirection;
     private Vector2 lastDirection = Vector2.down;
-
-	// Use this for initialization
-	void Start () {
-		Debug.Log(Animator.runtimeAnimatorController.name);
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	}
 
     public void Move(Vector2 movement, PlayerInputControl.InputState input) {
         string animControllerName = Animator.runtimeAnimatorController.name;
@@ -26,7 +15,7 @@ public class TopdownController : MonoBehaviour {
         if(animControllerName=="PlayerController"){
             AnimationV1(movement);
         }else if(animControllerName=="PlayerControllerV2"){
-            AnimationV2(movement, currentDirection);
+            AnimationV2(movement, currentDirection, input.Attack.Down);
         }else{
             Debug.LogWarning("Unknown Animation Controller: " + animControllerName);
         }
@@ -41,9 +30,16 @@ public class TopdownController : MonoBehaviour {
         Animator.SetBool("IsMoving", movement!=Vector2.zero);
     }
 
-    private void AnimationV2(Vector2 movement, Vector2 direction){
+    private void AnimationV2(Vector2 movement, Vector2 direction, bool attackPressed){
         Animator.SetFloat("FaceX", direction.x);
         Animator.SetFloat("FaceY", direction.y);
+
+        //TODO allow attack animation to finish before we go back to other states
+        if(attackPressed){
+            Debug.Log("ATTACK");
+            Animator.Play("Attack");
+            return;
+        }
 
         if(movement==Vector2.zero){
             Animator.Play("Idle");
@@ -67,7 +63,4 @@ public class TopdownController : MonoBehaviour {
         return lastDirection;
     }
 
-    public enum Direction {
-        Up,Down,Left,Right
-    }
 }
