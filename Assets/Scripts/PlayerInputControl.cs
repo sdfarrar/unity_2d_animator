@@ -19,19 +19,23 @@ public class PlayerInputControl : MonoBehaviour {
 	}
 
     private void FixedUpdate() {
-        float moveX = inputState.xAxis * MoveSpeed;
-        float moveY = inputState.yAxis * MoveSpeed;
-        Vector2 movement = new Vector2(moveX, moveY) * Time.fixedDeltaTime;
-        character.Move(movement, inputState);
+        Vector2 movement = new Vector2(inputState.xAxis, inputState.yAxis) * MoveSpeed * Time.fixedDeltaTime;
+        character.Move(movement.normalized, inputState);
+        inputState.Reset();
     }
 
-    public struct InputState {
-        public KeyState W,A,S,D; // Movement states
-        public KeyState Up,Down,Left,Right; // Movement states
-        public KeyState Attack; // Action states
 
-        public float xAxis;
-        public float yAxis;
+    public class InputState {
+        public KeyState Up,Down,Left,Right;
+        public float xAxis, yAxis;
+        public bool Attack;
+
+        public InputState() {
+            Up = new KeyState(KeyCode.W);
+            Left = new KeyState(KeyCode.A);
+            Down = new KeyState(KeyCode.S);
+            Right = new KeyState(KeyCode.D);
+        }
 
         public void Update() {
             PollAxes();
@@ -39,20 +43,30 @@ public class PlayerInputControl : MonoBehaviour {
             PollActions();
         }
 
+        public void Reset() {
+            Attack = false;
+        }
+
+        public bool IsOnlyUpHeld(){ return (Up.Held || yAxis>0) && !(Right.Held || Left.Held || Down.Held); }
+        public bool IsOnlyDownHeld(){ return (Down.Held || yAxis<0) && !(Right.Held || Left.Held || Up.Held); }
+        public bool IsOnlyLeftHeld(){ return (Left.Held || xAxis<0) && !(Down.Held || Up.Held || Right.Held); }
+        public bool IsOnlyRightHeld(){ return (Right.Held || xAxis>0) && !(Down.Held || Up.Held || Left.Held); }
+
         private void PollAxes() {
             xAxis = Input.GetAxisRaw("Horizontal");
             yAxis = Input.GetAxisRaw("Vertical");
         }
 
         private void PollMovement() {
-            Up = W = new KeyState(KeyCode.W);
-            Left = A = new KeyState(KeyCode.A);
-            Down = S = new KeyState(KeyCode.S);
-            Right = D = new KeyState(KeyCode.D);
+            Up.Update();
+            Left.Update();
+            Down.Update();
+            Right.Update();
         }
 
         private void PollActions() {
-            Attack = new KeyState("Fire1");
+            if(Attack){ return; }
+            Attack = Input.GetButtonDown("Fire1") || Input.GetKeyDown(KeyCode.Keypad4) || Input.GetMouseButtonDown(0);
         }
     }
 
@@ -60,14 +74,20 @@ public class PlayerInputControl : MonoBehaviour {
         public bool Down;
         public bool Held;
 
+        KeyCode code;
+
         public KeyState(KeyCode code){
-            Down = Input.GetKeyDown(code);
+            this.code = code;
+            Down = Held = false;
+        }
+
+        public void Update() {
+            Down = Down || Input.GetKeyDown(code); // preserve down presses until next reset
             Held = Input.GetKey(code);
         }
 
-        public KeyState(string name){
-            Down = Input.GetButtonDown(name);
-            Held = Input.GetButton(name);
+        public void Reset(){
+            Down = Held = false;
         }
     }
 

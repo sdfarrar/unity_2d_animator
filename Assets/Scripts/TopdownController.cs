@@ -7,56 +7,58 @@ public class TopdownController : MonoBehaviour {
     public Animator Animator;
 
     private Vector2 lastDirection = Vector2.down;
+    private string animatorState;
 
     public void Move(Vector2 movement, PlayerInputControl.InputState input) {
         string animControllerName = Animator.runtimeAnimatorController.name;
 
         Vector2 currentDirection = GetDirectionFromMovement(input);
-        if(animControllerName=="PlayerController"){
-            AnimationV1(movement);
-        }else if(animControllerName=="PlayerControllerV2"){
-            AnimationV2(movement, currentDirection, input.Attack.Down);
-        }else{
-            Debug.LogWarning("Unknown Animation Controller: " + animControllerName);
-        }
+        UpdateAnimation(movement, currentDirection, input.Attack);
 
-        Vector2 normalizedMove = movement.normalized;
         lastDirection = currentDirection;
     }
 
-    private void AnimationV1(Vector2 movement){
-        Animator.SetFloat("MoveX", movement.x);
-        Animator.SetFloat("MoveY", movement.y);
-        Animator.SetBool("IsMoving", movement!=Vector2.zero);
-    }
-
-    private void AnimationV2(Vector2 movement, Vector2 direction, bool attackPressed){
+    private void UpdateAnimation(Vector2 movement, Vector2 direction, bool attackPressed){
         Animator.SetFloat("FaceX", direction.x);
         Animator.SetFloat("FaceY", direction.y);
 
-        //TODO allow attack animation to finish before we go back to other states
-        if(attackPressed){
-            Debug.Log("ATTACK");
-            Animator.Play("Attack");
-            return;
+        if(attackPressed && !Attacking()){
+            SetAnimationState("Attack"); return;
+        }else if(Attacking() && !IsAttackingDone()){
+            return; // wait until attack animation is compeleted
         }
 
         if(movement==Vector2.zero){
-            Animator.Play("Idle");
+            SetAnimationState("Idle");
         }else{
-            Animator.Play("Walk");
+            SetAnimationState("Walk");
         }
     }
 
+    private void SetAnimationState(string name) {
+        animatorState = name;
+        Animator.Play(name);
+    }
+
+    private bool Attacking() {
+        return animatorState=="Attack";
+    }
+
+    private bool IsAttackingDone() {
+        return Attacking() && Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
+    }
+
     private Vector2 GetDirectionFromMovement(PlayerInputControl.InputState input) {
+        if(Attacking()){ return lastDirection; } // prevent player from turning when attacking
+
         // Only return a new direction if it's the only direction being held
-        if(input.Up.Held && !(input.Right.Held || input.Left.Held || input.Down.Held)){
+        if(input.IsOnlyUpHeld()){
             return Vector2.up;
-        }else if(input.Down.Held && !(input.Right.Held || input.Left.Held || input.Up.Held)){
+        }else if(input.IsOnlyDownHeld()){
             return Vector2.down;
-        }else if(input.Left.Held && !(input.Down.Held || input.Up.Held || input.Right.Held)){
+        }else if(input.IsOnlyLeftHeld()){
             return Vector2.left;
-        }else if(input.Right.Held && !(input.Down.Held || input.Up.Held || input.Left.Held)){
+        }else if(input.IsOnlyRightHeld()){
             return Vector2.right;
         }
 
