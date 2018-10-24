@@ -1,8 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TopdownController : MonoBehaviour {
+
+    public static event Action OnAttackStarted = delegate { };
+	public static event Action OnAttackFinished = delegate { };
 
     public Animator Animator;
 
@@ -23,9 +27,12 @@ public class TopdownController : MonoBehaviour {
         Animator.SetFloat("FaceY", direction.y);
 
         if(attackPressed && !Attacking()){
+            OnAttackStarted();
             SetAnimationState("Attack"); return;
         }else if(Attacking() && !IsAttackingDone()){
             return; // wait until attack animation is compeleted
+        }else if(Attacking() && IsAttackingDone()){
+            OnAttackFinished();
         }
 
         if(movement==Vector2.zero){
