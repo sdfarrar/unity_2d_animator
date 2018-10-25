@@ -13,11 +13,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Frames:
   - Sprite: {fileID: 21300164, guid: 03566ea9acacd7b439ed398c9cdd2a36, type: 3}
-    Duration: 1
+    Duration: 60
   - Sprite: {fileID: 21300166, guid: 03566ea9acacd7b439ed398c9cdd2a36, type: 3}
     Duration: 1
   - Sprite: {fileID: 21300168, guid: 03566ea9acacd7b439ed398c9cdd2a36, type: 3}
     Duration: 1
-  SampleRate: 0.9
+  SampleRate: 0.11
   Loop: 1
   Mirror: 0
