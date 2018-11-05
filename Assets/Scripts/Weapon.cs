@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour {
 
+    [Range(1, 50)]
+    public int DamageAmount = 20;
 	public BoxCollider2D Hurtbox;
 	public LayerMask HitMask;
 
@@ -39,9 +41,15 @@ public class Weapon : MonoBehaviour {
 			if(objectsHitThisCycle.Contains(go)){ continue; } // ignore, we've already hit this
 
 			objectsHitThisCycle.Add(go);
-			Debug.Log("hit: " + go.name);
+            Damage(go);
 		}
 	}
+
+    private void Damage(GameObject go) {
+        Health health = go.transform.root.GetComponent<Health>();
+        if(health==null){ return; }
+        health.ApplyChange(-DamageAmount);
+    }
 
     private void Enable() {
 		this.enabled = true;
