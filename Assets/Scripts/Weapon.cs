@@ -5,10 +5,12 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour {
 
-    [Range(1, 50)]
-    public int DamageAmount = 20;
+	[Range(1, 50)]
+	public int DamageAmount = 20;
 	public BoxCollider2D Hurtbox;
 	public LayerMask HitMask;
+	[Range(0, 2)]
+	public float PushbackForce = 0.25f;
 
 	private Collider2D[] colliderHits = new Collider2D[10];
 
@@ -19,15 +21,15 @@ public class Weapon : MonoBehaviour {
 	///</summary>
 	private HashSet<GameObject> objectsHitThisCycle = new HashSet<GameObject>();
 
-    private void Awake() {
-        PlayerController.OnAttackStarted += Enable;
-        PlayerController.OnAttackFinished += Disable;
-    }
+	private void Awake() {
+		PlayerController.OnAttackStarted += Enable;
+		PlayerController.OnAttackFinished += Disable;
+	}
 
-    private void OnDestroy() {
-        PlayerController.OnAttackStarted -= Enable;
-        PlayerController.OnAttackFinished -= Disable;
-    }
+	private void OnDestroy() {
+		PlayerController.OnAttackStarted -= Enable;
+		PlayerController.OnAttackFinished -= Disable;
+	}
 
 	private void Update() {
 		if(!Hurtbox.enabled){ return; }
@@ -41,22 +43,30 @@ public class Weapon : MonoBehaviour {
 			if(objectsHitThisCycle.Contains(go)){ continue; } // ignore, we've already hit this
 
 			objectsHitThisCycle.Add(go);
-            Damage(go);
+			Damage(go, colliderHits[i]);
 		}
 	}
 
-    private void Damage(GameObject go) {
-        Health health = go.transform.root.GetComponent<Health>();
-        if(health==null){ return; }
-        health.ApplyChange(-DamageAmount);
-    }
+	private void Damage(GameObject go, Collider2D other) {
+		Health health = go.transform.root.GetComponent<Health>();
+		if(health==null){ return; }
 
-    private void Enable() {
+		health.ApplyChange(-DamageAmount);
+		Pushback(go, other);
+	}
+
+	private void Pushback(GameObject go, Collider2D other) {
+		Vector3 force = (other.transform.position - transform.position).normalized * PushbackForce;
+		force.z = 0f;
+		go.transform.root.position += force;
+	}
+
+	private void Enable() {
 		this.enabled = true;
 		Hurtbox.gameObject.SetActive(true);
 	}
 
-    private void Disable() {
+	private void Disable() {
 		this.enabled = false;
 		objectsHitThisCycle.Clear();
 		Hurtbox.gameObject.SetActive(false);

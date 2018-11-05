@@ -357,6 +357,11 @@ Prefab:
       propertyPath: m_Name
       value: Hitbox
       objectReference: {fileID: 0}
+    - target: {fileID: 114303677175776112, guid: e1514015b0bdc75429544ad8640725e4,
+        type: 2}
+      propertyPath: PushbackForce
+      value: 0.25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1514015b0bdc75429544ad8640725e4, type: 2}
   m_IsPrefabAsset: 0
