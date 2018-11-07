@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4016314935021352}
   - component: {fileID: 61984836399761890}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: Hurtbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37,6 +37,7 @@ GameObject:
   - component: {fileID: 4983230517519650}
   - component: {fileID: 50546973748314462}
   - component: {fileID: 114303677175776112}
+  - component: {fileID: 114567911259801180}
   - component: {fileID: 114794916764242932}
   - component: {fileID: 114703265958763314}
   m_Layer: 16
@@ -114,7 +115,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1848672312708568}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalPosition: {x: 0, y: 0.94, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4819651104839660}
@@ -166,7 +167,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.19}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -239,6 +240,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 131072
   PushbackForce: 0.25
+--- !u!114 &114567911259801180
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1464975221140330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceca040b71f25234e89042ec3c6ff482, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHP: 100
+  currentHP: 0
+  invulnerabilityTime: 2
 --- !u!114 &114703265958763314
 MonoBehaviour:
   m_ObjectHideFlags: 1

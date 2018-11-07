@@ -4,14 +4,23 @@ using UnityEngine;
 
 public class DamageOnContact : MonoBehaviour {
 
+    [Range(1, 100)]
+    public int DamageAmount = 20;
     public BoxCollider2D DamageArea;
     public LayerMask DamageMask;
 
-    private void Update() {
-        Collider2D hit = Physics2D.OverlapBox(Vector2.one * DamageArea.transform.position + DamageArea.offset, DamageArea.size, DamageArea.transform.rotation.eulerAngles.z, DamageMask);
-        if(!hit){ return; }
+    private Collider2D[] colliders = new Collider2D[1];
 
-        Debug.Log("hit " + hit.gameObject.name);
+    private void Update() {
+        Vector2 point = new Vector2(DamageArea.transform.position.x, DamageArea.transform.position.y) + DamageArea.offset;
+        int hits = Physics2D.OverlapBoxNonAlloc(point, DamageArea.size, DamageArea.transform.rotation.eulerAngles.z, colliders, DamageMask);
+        if(hits==0){ return; }
+
+        Collider2D hit = colliders[0];
+        Health health = hit.transform.root.GetComponent<Health>();
+        if(!health){ return ; }
+
+        health.ApplyChange(-DamageAmount);
     }
 
 }
